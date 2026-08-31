@@ -44,8 +44,9 @@ export default defineConfig({
         // The globe is lazy-loaded, but its local textures and bundled attribution must
         // remain available after the first PWA install/update for offline cache reuse.
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,webp,jpg,md}'],
-        // The bundle is above Workbox's 2 MiB default because sing-box native
-        // API support and the Tools page are always bundled.
+        // The main chunk sits at ~1.75 MiB — under Workbox's 2 MiB default, but not
+        // by enough to rely on. Keep the ceiling raised so it can't silently fall out
+        // of the precache (and stop working offline) the next time it grows a little.
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
       },
       manifest: {
@@ -85,8 +86,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-      // mmdb-lib imports Node's `net`; back it with a tiny browser shim.
-      net: fileURLToPath(new URL('./src/helper/netShim.ts', import.meta.url)),
     },
   },
 })

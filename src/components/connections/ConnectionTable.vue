@@ -220,6 +220,7 @@ import {
 } from '@/assembly/connections'
 import { useConnections } from '@/composables/connections'
 import {
+  CONNECTION_GROUPABLE_KEYS,
   CONNECTION_TAB_TYPE,
   CONNECTIONS_TABLE_ACCESSOR_KEY,
   PROXY_CHAIN_DIRECTION,
@@ -325,7 +326,7 @@ const highlightedCell =
     })
   }
 
-const columns: ColumnDef<Connection>[] = [
+const columnDefinitions: ColumnDef<Connection>[] = [
   {
     header: () => t(CONNECTIONS_TABLE_ACCESSOR_KEY.Close),
     enableSorting: false,
@@ -559,28 +560,14 @@ const columns: ColumnDef<Connection>[] = [
       getTableDisplayValue(original, CONNECTIONS_TABLE_ACCESSOR_KEY.InboundUser),
     cell: highlightedCell(CONNECTIONS_TABLE_ACCESSOR_KEY.InboundUser),
   },
-  {
-    header: () => t(CONNECTIONS_TABLE_ACCESSOR_KEY.Protocol),
-    id: CONNECTIONS_TABLE_ACCESSOR_KEY.Protocol,
-    accessorFn: (original) =>
-      getTableDisplayValue(original, CONNECTIONS_TABLE_ACCESSOR_KEY.Protocol),
-    cell: highlightedCell(CONNECTIONS_TABLE_ACCESSOR_KEY.Protocol),
-  },
-  {
-    header: () => t(CONNECTIONS_TABLE_ACCESSOR_KEY.OutboundType),
-    id: CONNECTIONS_TABLE_ACCESSOR_KEY.OutboundType,
-    accessorFn: (original) =>
-      getTableDisplayValue(original, CONNECTIONS_TABLE_ACCESSOR_KEY.OutboundType),
-    cell: highlightedCell(CONNECTIONS_TABLE_ACCESSOR_KEY.OutboundType),
-  },
-  {
-    header: () => t(CONNECTIONS_TABLE_ACCESSOR_KEY.FromOutbound),
-    id: CONNECTIONS_TABLE_ACCESSOR_KEY.FromOutbound,
-    accessorFn: (original) =>
-      getTableDisplayValue(original, CONNECTIONS_TABLE_ACCESSOR_KEY.FromOutbound),
-    cell: highlightedCell(CONNECTIONS_TABLE_ACCESSOR_KEY.FromOutbound),
-  },
 ]
+
+const groupableKeySet = new Set<string>(CONNECTION_GROUPABLE_KEYS)
+const columns: ColumnDef<Connection>[] = columnDefinitions.map((column) => ({
+  ...column,
+  // 与移动卡片共用显式白名单，避免 TanStack 的隐式默认值让两端能力漂移。
+  enableGrouping: typeof column.id === 'string' && groupableKeySet.has(column.id),
+}))
 
 const grouping = useStorage<GroupingState>('config/table-grouping', [])
 const expanded = useStorage<ExpandedState>('config/table-expanded', {})
