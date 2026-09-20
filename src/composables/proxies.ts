@@ -6,6 +6,7 @@ import {
   proxyMap,
   proxyProviederList,
 } from '@/assembly/proxies'
+import { tailscaleDeviceItems, tailscaleExitItems } from '@/composables/tailscale'
 import { GLOBAL, PROXY_TAB_TYPE } from '@/constant'
 import { isHiddenGroup } from '@/helper'
 import { groupsInActiveFolder, isProxyFolderModeActive } from '@/store/proxyFolders'
@@ -75,13 +76,18 @@ export const renderProxyGroups = computed(getRenderProxyGroups)
 export const renderProxyProviders = computed(getRenderProxyProviders)
 
 export const renderProxiesPageItems = computed(() => {
+  // Tailscale outbounds contribute synthetic cards: exit nodes next to the
+  // proxy groups, and the full device list next to the providers.
   if (proxiesTabShow.value === PROXY_TAB_TYPE.PROVIDER) {
-    return renderProxyProviders.value
+    return [...renderProxyProviders.value, ...tailscaleDeviceItems.value]
   }
 
   const groups = renderProxyGroups.value
-  if (!isProxyFolderModeActive.value) return groups
+  // Pinned above the groups: this is the switcher people come to the page for.
+  const withExitNodes = (list: string[]) => [...tailscaleExitItems.value, ...list]
+
+  if (!isProxyFolderModeActive.value) return withExitNodes(groups)
   const filter = groupsInActiveFolder.value
-  if (!filter) return groups
-  return groups.filter((name) => filter.has(name))
+  if (!filter) return withExitNodes(groups)
+  return withExitNodes(groups.filter((name) => filter.has(name)))
 })

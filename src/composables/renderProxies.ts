@@ -1,6 +1,6 @@
 import { latencyMapOf, proxyMap, proxyProviederList, type LatencyMap } from '@/assembly/proxies'
 import { NOT_CONNECTED, PROXY_SORT_TYPE } from '@/constant'
-import { isProxyGroup } from '@/helper'
+import { isAlwaysVisibleProxy, isProxyGroup } from '@/helper'
 import {
   hideUnavailableProxies,
   proxyGroupFilterMap,
@@ -82,7 +82,10 @@ const filterProxies = (
 
   if (hideUnavailableProxies.value) {
     result = result.filter(
-      (name) => isProxyGroup(name) || (latencyMap.get(name) ?? NOT_CONNECTED) > NOT_CONNECTED,
+      (name) =>
+        isProxyGroup(name) ||
+        isAlwaysVisibleProxy(name) ||
+        (latencyMap.get(name) ?? NOT_CONNECTED) > NOT_CONNECTED,
     )
   }
 

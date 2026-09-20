@@ -16,6 +16,17 @@ import { computed } from 'vue'
 
 const PROXY_GROUP_TYPES = new Set<string>(Object.values(PROXY_TYPE))
 
+/*
+ * These outbounds carry no meaningful latency of their own: olcrtc warms up a
+ * WebRTC link on first use, and a Tailscale node is a tunnel rather than a
+ * server to probe. Hiding unavailable proxies must not swallow them, or the
+ * entry point to a working route disappears from the page.
+ */
+const ALWAYS_VISIBLE_PROXY_TYPES = new Set(['olcrtc', 'tailscale'])
+
+export const isAlwaysVisibleProxy = (name: string) =>
+  ALWAYS_VISIBLE_PROXY_TYPES.has(proxyMap.value[name]?.type?.toLowerCase() ?? '')
+
 export const isProxyGroup = (name: string) => {
   const proxyNode = proxyMap.value[name]
 

@@ -96,10 +96,14 @@ export type TailscaleStatus = {
   /** ipn.State string, e.g. 'Running' or 'NeedsLogin'. */
   backendState: string
   self?: TailscalePeer
+  /** Set while the node needs a login; opening it authorises the node. */
+  authURL?: string
   /** What the outbound is configured to use; '' when none. */
   exitNode: string
   /** Whether traffic is actually leaving through an exit node. */
   exitNodeActive: boolean
+  /** Administrative on/off switch, the equivalent of tailscale up/down. */
+  wantRunning: boolean
   peers: TailscalePeer[]
 }
 

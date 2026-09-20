@@ -571,6 +571,12 @@ const en = {
   tailscaleNoDevices: 'No devices in this tailnet yet',
   tailscaleSelf: 'This node',
   tailscaleLastSeen: 'Last seen',
+  tailscaleExitNodes: 'Exit nodes',
+  tailscaleDirectHint: 'no exit node',
+  tailscaleNotOffered: 'not offered',
+  tailscaleAuthorize: 'Authorize',
+  tailscaleStop: 'Stop',
+  tailscaleStart: 'Start',
 }
 
 export type LANG_MESSAGE = typeof en

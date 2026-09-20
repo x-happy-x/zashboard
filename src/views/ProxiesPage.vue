@@ -29,7 +29,16 @@
           :size-cache-key="cardVariant"
         >
           <template v-slot="{ item }: { item: string }">
+            <TailscaleExitNodes
+              v-if="isTailscaleExitItem(item)"
+              :name="item"
+            />
+            <TailscaleDevices
+              v-else-if="isTailscaleDevicesItem(item)"
+              :name="item"
+            />
             <component
+              v-else
               :is="renderComponent"
               :name="item"
             />
@@ -38,7 +47,6 @@
       </div>
     </div>
     <ProxyGroupChainModal />
-    <TailscaleModal />
   </div>
 </template>
 
@@ -51,7 +59,9 @@ import ProxyGroup from '@/components/proxies/ProxyGroup.vue'
 import ProxyGroupForMobile from '@/components/proxies/ProxyGroupForMobile.vue'
 import ProxyProvider from '@/components/proxies/ProxyProvider.vue'
 import ProxyGroupChainModal from '@/components/proxies/ProxyGroupChainModal.vue'
-import TailscaleModal from '@/components/proxies/TailscaleModal.vue'
+import TailscaleDevices from '@/components/proxies/TailscaleDevices.vue'
+import TailscaleExitNodes from '@/components/proxies/TailscaleExitNodes.vue'
+import { isTailscaleDevicesItem, isTailscaleExitItem } from '@/composables/tailscale'
 import { usePaddingForViews } from '@/composables/paddingViews'
 import { disableProxiesPageScroll, renderProxiesPageItems } from '@/composables/proxies'
 import { PROXY_TAB_TYPE } from '@/constant'

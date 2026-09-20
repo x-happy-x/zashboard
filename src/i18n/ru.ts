@@ -573,6 +573,12 @@ const ru: LANG_MESSAGE = {
   tailscaleNoDevices: 'В этой сети пока нет устройств',
   tailscaleSelf: 'Этот узел',
   tailscaleLastSeen: 'Последний раз в сети',
+  tailscaleExitNodes: 'Выходные ноды',
+  tailscaleDirectHint: 'без выходной ноды',
+  tailscaleNotOffered: 'не предлагается',
+  tailscaleAuthorize: 'Авторизовать',
+  tailscaleStop: 'Стоп',
+  tailscaleStart: 'Старт',
 }
 
 export default ru

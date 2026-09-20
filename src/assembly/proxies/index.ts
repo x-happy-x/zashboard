@@ -238,5 +238,6 @@ export {
   flushSmartGroupWeightsAPI,
   proxyProviderHealthCheckAPI,
   setTailscaleExitNodeAPI,
+  setTailscaleRunningAPI,
   updateProxyProviderAPI,
 } from '@/api/clash'

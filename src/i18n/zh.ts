@@ -557,6 +557,12 @@ const zh: LANG_MESSAGE = {
   tailscaleNoDevices: '此 tailnet 中暂无设备',
   tailscaleSelf: '本节点',
   tailscaleLastSeen: '最后在线',
+  tailscaleExitNodes: '出口节点',
+  tailscaleDirectHint: '不使用出口节点',
+  tailscaleNotOffered: '未提供',
+  tailscaleAuthorize: '去授权',
+  tailscaleStop: '停止',
+  tailscaleStart: '启动',
 }
 
 export default zh

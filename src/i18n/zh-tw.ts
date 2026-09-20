@@ -557,6 +557,12 @@ const zhTW: LANG_MESSAGE = {
   tailscaleNoDevices: '此 tailnet 中尚無裝置',
   tailscaleSelf: '本節點',
   tailscaleLastSeen: '最後上線',
+  tailscaleExitNodes: '出口節點',
+  tailscaleDirectHint: '不使用出口節點',
+  tailscaleNotOffered: '未提供',
+  tailscaleAuthorize: '去授權',
+  tailscaleStop: '停止',
+  tailscaleStart: '啟動',
 }
 
 export default zhTW

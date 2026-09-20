@@ -98,6 +98,11 @@ export const setTailscaleExitNodeAPI = (proxyName: string, exitNode: string) => 
   })
 }
 
+// Starts or stops the tailnet node itself, without touching the outbound.
+export const setTailscaleRunningAPI = (proxyName: string, running: boolean) => {
+  return axios.put(`/proxies/${encodeURIComponent(proxyName)}/tailscale/running`, { running })
+}
+
 export const fetchProxyProviderAPI = () => {
   return axios.get<{ providers: Record<string, ProxyProvider> }>('/providers/proxies')
 }
