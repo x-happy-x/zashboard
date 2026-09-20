@@ -545,6 +545,18 @@ const zh: LANG_MESSAGE = {
   folder_preview: '自动匹配的代理组',
   folder_no_matches: '没有匹配的代理组',
   folder_delete_confirm: '确认删除文件夹「{name}」？',
+
+  // Tailscale
+  tailscaleLoading: '正在加载 tailnet…',
+  tailscaleBackendState: '后端',
+  tailscaleExitNode: '出口节点',
+  tailscaleNoExitNode: '无',
+  tailscaleExitNodeActive: '使用中',
+  tailscaleExitNodeCapable: '可作出口',
+  tailscaleDevices: '设备',
+  tailscaleNoDevices: '此 tailnet 中暂无设备',
+  tailscaleSelf: '本节点',
+  tailscaleLastSeen: '最后在线',
 }
 
 export default zh

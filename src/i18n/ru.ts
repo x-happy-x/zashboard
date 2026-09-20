@@ -561,6 +561,18 @@ const ru: LANG_MESSAGE = {
   folder_preview: 'Автоматически подобранные группы',
   folder_no_matches: 'Нет подходящих групп',
   folder_delete_confirm: 'Удалить папку «{name}»?',
+
+  // Tailscale
+  tailscaleLoading: 'Загрузка tailnet…',
+  tailscaleBackendState: 'Бэкенд',
+  tailscaleExitNode: 'Выходная нода',
+  tailscaleNoExitNode: 'Нет',
+  tailscaleExitNodeActive: 'используется',
+  tailscaleExitNodeCapable: 'может быть выходной',
+  tailscaleDevices: 'Устройства',
+  tailscaleNoDevices: 'В этой сети пока нет устройств',
+  tailscaleSelf: 'Этот узел',
+  tailscaleLastSeen: 'Последний раз в сети',
 }
 
 export default ru

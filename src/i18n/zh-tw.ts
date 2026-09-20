@@ -545,6 +545,18 @@ const zhTW: LANG_MESSAGE = {
   folder_preview: '自動匹配的代理組',
   folder_no_matches: '沒有符合的代理組',
   folder_delete_confirm: '確認刪除資料夾「{name}」？',
+
+  // Tailscale
+  tailscaleLoading: '正在載入 tailnet…',
+  tailscaleBackendState: '後端',
+  tailscaleExitNode: '出口節點',
+  tailscaleNoExitNode: '無',
+  tailscaleExitNodeActive: '使用中',
+  tailscaleExitNodeCapable: '可作出口',
+  tailscaleDevices: '裝置',
+  tailscaleNoDevices: '此 tailnet 中尚無裝置',
+  tailscaleSelf: '本節點',
+  tailscaleLastSeen: '最後上線',
 }
 
 export default zhTW

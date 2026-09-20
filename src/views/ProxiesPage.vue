@@ -38,6 +38,7 @@
       </div>
     </div>
     <ProxyGroupChainModal />
+    <TailscaleModal />
   </div>
 </template>
 
@@ -50,6 +51,7 @@ import ProxyGroup from '@/components/proxies/ProxyGroup.vue'
 import ProxyGroupForMobile from '@/components/proxies/ProxyGroupForMobile.vue'
 import ProxyProvider from '@/components/proxies/ProxyProvider.vue'
 import ProxyGroupChainModal from '@/components/proxies/ProxyGroupChainModal.vue'
+import TailscaleModal from '@/components/proxies/TailscaleModal.vue'
 import { usePaddingForViews } from '@/composables/paddingViews'
 import { disableProxiesPageScroll, renderProxiesPageItems } from '@/composables/proxies'
 import { PROXY_TAB_TYPE } from '@/constant'

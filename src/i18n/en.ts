@@ -559,6 +559,18 @@ const en = {
   folder_preview: 'Auto-matched groups',
   folder_no_matches: 'No matched groups',
   folder_delete_confirm: 'Delete folder "{name}"?',
+
+  // Tailscale
+  tailscaleLoading: 'Loading tailnet…',
+  tailscaleBackendState: 'Backend',
+  tailscaleExitNode: 'Exit node',
+  tailscaleNoExitNode: 'None',
+  tailscaleExitNodeActive: 'in use',
+  tailscaleExitNodeCapable: 'can exit',
+  tailscaleDevices: 'Devices',
+  tailscaleNoDevices: 'No devices in this tailnet yet',
+  tailscaleSelf: 'This node',
+  tailscaleLastSeen: 'Last seen',
 }
 
 export type LANG_MESSAGE = typeof en

@@ -26,8 +26,12 @@
 
     <div class="flex h-4 w-full items-center justify-between">
       <span
-        :class="`truncate text-xs tracking-tight ${active ? 'text-primary-content' : 'text-base-content/60'}`"
+        :class="[
+          `truncate text-xs tracking-tight ${active ? 'text-primary-content' : 'text-base-content/60'}`,
+          isTailscale && 'cursor-pointer underline decoration-dotted underline-offset-2',
+        ]"
         @mouseenter="checkTruncation"
+        @click.stop="isTailscale && openTailscale(node.name)"
       >
         {{ typeDescription }}
       </span>
@@ -50,6 +54,7 @@ import {
   highlightedProxyNode,
   scrollNodeIntoViewKey,
 } from '@/composables/proxiesScroll'
+import { openTailscale } from '@/composables/tailscale'
 import { proxyLatencyTest } from '@/assembly/proxies'
 import { getIPv6ByName, getTestUrl, proxyMap } from '@/assembly/proxies'
 import { IPv6test, proxyCardSize, proxySortType, truncateProxyName } from '@/store/settings'
@@ -88,6 +93,8 @@ const typeFormatter = (type: string) => {
 
   return type
 }
+// Tailscale nodes carry a whole tailnet behind them, reachable from the label.
+const isTailscale = computed(() => node.value?.type.toLowerCase() === 'tailscale')
 const isSmallCard = computed(() => proxyCardSize.value === PROXY_CARD_SIZE.SMALL)
 const typeDescription = computed(() => {
   const type = typeFormatter(node.value.type)

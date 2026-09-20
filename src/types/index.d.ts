@@ -70,6 +70,39 @@ export type SubscriptionInfo = {
   Expire?: number
 }
 
+/** One node of a tailnet, as reported by the core for a Tailscale outbound. */
+export type TailscalePeer = {
+  id: string
+  hostName: string
+  dnsName: string
+  os?: string
+  ips: string[] | null
+  tags?: string[]
+  routes?: string[]
+  relay?: string
+  online: boolean
+  self: boolean
+  /** This peer is the exit node currently in use. */
+  exitNode: boolean
+  /** This peer may be selected as an exit node. */
+  exitNodeOption: boolean
+  /** RFC3339, only set while the node is offline. */
+  lastSeen?: string
+  rxBytes: number
+  txBytes: number
+}
+
+export type TailscaleStatus = {
+  /** ipn.State string, e.g. 'Running' or 'NeedsLogin'. */
+  backendState: string
+  self?: TailscalePeer
+  /** What the outbound is configured to use; '' when none. */
+  exitNode: string
+  /** Whether traffic is actually leaving through an exit node. */
+  exitNodeActive: boolean
+  peers: TailscalePeer[]
+}
+
 export type ProxyProvider = {
   subscriptionInfo?: SubscriptionInfo
   name: string

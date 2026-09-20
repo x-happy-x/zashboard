@@ -21,6 +21,7 @@ import type {
   ProxyProvider,
   Rule,
   RuleProvider,
+  TailscaleStatus,
 } from '@/types'
 import axios from 'axios'
 import { debounce } from 'lodash'
@@ -80,6 +81,20 @@ export const fetchProxyGroupLatencyAPI = (proxyName: string, url: string, timeou
       url,
       timeout,
     },
+  })
+}
+
+// Tailscale outbounds expose their tailnet through the core; other proxy types
+// answer 400 here, so callers should only hit this for type === 'tailscale'.
+export const fetchTailscaleStatusAPI = (proxyName: string) => {
+  return axios.get<TailscaleStatus>(`/proxies/${encodeURIComponent(proxyName)}/tailscale`)
+}
+
+// An empty node clears the exit node. The change applies immediately and lasts
+// until a config reload recreates the outbound.
+export const setTailscaleExitNodeAPI = (proxyName: string, exitNode: string) => {
+  return axios.put(`/proxies/${encodeURIComponent(proxyName)}/tailscale/exit-node`, {
+    exitNode,
   })
 }
 
