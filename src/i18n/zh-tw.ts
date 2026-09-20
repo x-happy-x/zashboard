@@ -111,6 +111,7 @@ const zhTW: LANG_MESSAGE = {
   ruleCount: '規則數',
   hitCount: '命中',
   missCount: '未命中',
+  hitMissCount: '命中 / 未命中',
   behavior: '行為',
   vehicleType: '來源類型',
   customTableColumns: '自訂表格列',
@@ -150,6 +151,7 @@ const zhTW: LANG_MESSAGE = {
   upgradeToAlpha: '升級到 Alpha',
   updateGeoDatabase: '更新GEO',
   tunMode: 'Tun 模式',
+  tunStack: 'Tun 堆疊',
   truncateProxyName: '截斷節點名稱',
   disableProxiesPageTextSelect: '禁用代理頁文字選取',
   sourceIPLabels: '源IP標籤',
@@ -176,6 +178,8 @@ const zhTW: LANG_MESSAGE = {
   ruleSettings: '規則設定',
   connectionDetails: '連接詳情',
   customTheme: '自訂主題',
+  customCSS: '自訂 CSS',
+  customCSSTip: '以下樣式會原樣注入頁面，無效的規則可能導致介面顯示異常。',
   unavailableProxy: '隱藏不可用節點',
   protocolTips:
     '您正在嘗試連接一個http後端但zashboard是通過https提供的，這可能會導致連接錯誤，請在瀏覽器設定中允許不安全的內容，或者使用http版本面板例如http://board.zash.run.place',
@@ -266,6 +270,8 @@ const zhTW: LANG_MESSAGE = {
   independentLatencyTestTip:
     '開啟獨立延遲測試會在測速中盡可能的使用配置檔案中的url覆蓋面板設定的url，並展示根據策略組設定的url獲取的延遲。',
   search: '搜尋',
+  searchVisibleColumns: '僅搜尋展示的欄位',
+  searchHiddenColumns: '搜尋包含隱藏的欄位',
   searchProxyGroup: '搜尋代理組',
   searchProxyNode: '搜尋節點',
   proxySearchModeGlobal: '節點搜尋',

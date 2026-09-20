@@ -56,81 +56,148 @@
   animation: highlightFlash 0.6s ease-out 2;
 }
 
-/* ---------- 侧栏 / 分段控件的滑动指示器 ---------- */
+/* ---------- 侧栏菜单 / 分段 Tabs 的滑动指示器 ---------- */
 
-.sidebar-tab-indicator {
-  border-radius: var(--radius-field);
+.nav-indicator {
   transform-origin: center;
   will-change: transform, width, height;
 }
 
-.sidebar-tab-indicator-ready {
+.nav-indicator-ready {
   transition:
-    transform 0.55s cubic-bezier(0.22, 1.5, 0.36, 1),
+    transform 0.24s cubic-bezier(0.32, 0.72, 0, 1),
     width 0.32s cubic-bezier(0.32, 0.72, 0, 1),
     height 0.32s cubic-bezier(0.32, 0.72, 0, 1),
     opacity 0.15s ease-out;
 }
 
-.sidebar-tab-active {
-  color: var(--color-neutral-content);
-  transition: color 0.18s ease-out;
-}
-
-.ios-segment-indicator {
-  will-change: transform, width;
-}
-
-.ios-segment-indicator-ready {
+.nav-item {
   transition:
-    transform 0.4s cubic-bezier(0.32, 0.72, 0, 1),
-    width 0.4s cubic-bezier(0.32, 0.72, 0, 1),
-    opacity 0.15s ease-out;
+    color 0.15s ease-out,
+    background-color 0.15s ease-out;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sidebar-tab-indicator-ready,
-  .sidebar-tab-active,
-  .ios-segment-indicator-ready {
+  .nav-indicator-ready,
+  .nav-item {
     transition: none;
   }
 }
 
-/* ---------- 代理节点网格 ---------- */
-
-/* 重排 FLIP + 增删淡入淡出 */
-.proxy-node-move {
-  transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
-}
-
-/* 无限滚动追加的批次淡入 */
-.proxy-node-enter-active {
-  transition:
-    opacity 0.2s ease-out,
-    scale 0.2s cubic-bezier(0.32, 0.72, 0, 1);
-}
-.proxy-node-enter-from {
-  opacity: 0;
-  scale: 0.92;
-}
+/* ---------- 折叠卡片 ---------- */
 
 /*
- * 离场不脱离文档流:网格里用 absolute 会让所有离场卡片堆到左上角,
- * 搜索过滤时一次消失几十张会非常噪。就地淡出、结束后再重排。
+ * 卡片高度、内容淡入淡出、后面行的位移共用一组 WAAPI 时长与曲线。
+ * 挂在 :root 而不是 .collapse-motion 上：行的位移那条选中的是卡片的兄弟节点，
+ * 拿不到卡片自己的自定义属性。
  */
-.proxy-node-leave-active {
-  transition:
-    opacity 0.15s ease-in,
-    scale 0.15s ease-in;
+:root {
+  --collapse-motion-duration: 0.26s;
+  --collapse-motion-ease: cubic-bezier(0.34, 0.1, 0.2, 1);
 }
-.proxy-node-leave-to {
+
+.collapse-motion {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: max-content max-content;
+}
+
+.collapse-motion > .collapse-motion-header {
+  grid-area: 1 / 1;
+}
+
+.collapse-motion > .collapse-motion-body {
+  grid-area: 2 / 1;
+  display: grid;
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.collapse-motion-preview,
+.collapse-motion-content {
+  grid-area: 1 / 1;
+  align-self: start;
+  opacity: 1;
+}
+
+.collapse-motion-body-transitioning > :is(.collapse-motion-preview, .collapse-motion-content) {
+  position: absolute;
+  inset: 0 0 auto;
+}
+
+.collapse-motion-open .collapse-motion-preview,
+.collapse-motion:not(.collapse-motion-open) .collapse-motion-content {
+  pointer-events: none;
   opacity: 0;
-  scale: 0.92;
 }
+
+.collapse-motion-placeholder {
+  position: relative;
+}
+
+.collapse-motion-floating > .collapse-motion {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  z-index: 1;
+}
+
+.virtual-row-shift-row {
+  transform: translateY(var(--virtual-row-shift, 0px));
+}
+
+/* 零时长动画也会正常完成并交接，无需额外的结束事件兜底。 */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --collapse-motion-duration: 0s;
+  }
+}
+
+/* ---------- 代理组卡片（移动端） ---------- */
+
+/*
+ * 遮罩跟弹窗对齐：和 DialogWrapper 的遮罩用同一条过渡（0.25s + CSS 关键字 ease-out，
+ * 即 cubic-bezier(0, 0, 0.58, 1)），压暗读起来才是同一种动作。
+ *
+ * 卡片生长和内容渐显不跟：那是这张卡自己的展开，要比遮罩利落，沿用原本的 0.2s +
+ * Tailwind 的 ease-out —— cubic-bezier(0, 0, 0.2, 1) 前段冲得快，换成上面那条会明显拖。
+ *
+ * reduced-motion 下刻意不降级：一来要跟 DialogWrapper 的遮罩保持一致（那边也只降级了
+ * .modal-box 的位移），二来卡片的展开/收起靠 width 的 transitionend 交接
+ * （见 ProxyGroupForMobile 的 handlerTransitionEnd），过渡取消掉事件就不再触发。
+ */
+:root {
+  --proxy-group-backdrop-motion: 0.25s ease-out;
+  --proxy-group-card-motion: 0.2s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.proxy-group-backdrop-enter-active,
+.proxy-group-backdrop-leave-active {
+  transition: opacity var(--proxy-group-backdrop-motion);
+}
+
+.proxy-group-backdrop-enter-from,
+.proxy-group-backdrop-leave-to {
+  opacity: 0;
+}
+
+.proxy-group-card {
+  transition:
+    width var(--proxy-group-card-motion),
+    transform var(--proxy-group-card-motion),
+    max-height var(--proxy-group-card-motion);
+}
+
+.proxy-group-card-content {
+  transition: opacity var(--proxy-group-card-motion);
+}
+
+/* ---------- 代理节点网格 ---------- */
 
 /*
  * 测速后节点被重新排序时的定位提示。用 animation 而非 transition,
- * 才不会和 .proxy-node-move 的 FLIP 抢 transition-property。
+ * 让提示动画独立于节点本身的过渡属性。
  */
 .latency-highlight::after {
   content: '';
@@ -152,11 +219,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .proxy-node-move,
-  .proxy-node-enter-active,
-  .proxy-node-leave-active {
-    transition: none;
-  }
   .latency-highlight::after {
     animation: none;
   }

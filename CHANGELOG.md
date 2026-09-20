@@ -2,6 +2,66 @@
 
 # Changelog
 
+## [3.28.0](https://github.com/Zephyruso/zashboard/compare/v3.27.0...v3.28.0) (2026-09-17)
+
+
+### Features
+
+* add overscroll lock functionality for iOS to prevent page bounce ([50c873c](https://github.com/Zephyruso/zashboard/commit/50c873c8d75da33222391e265c311657be3c8091))
+* add tun stack configuration and localization support ([aadccc6](https://github.com/Zephyruso/zashboard/commit/aadccc64c85f6df8ab4807f2e400325b5696d029))
+* enhance sidebar and navigation components, improve performance and styling ([b541b9d](https://github.com/Zephyruso/zashboard/commit/b541b9d78fc1ac4a516ce94f909589842016b1e7))
+
+
+### Bug Fixes
+
+* enhance rule hit tooltip with formatted last hit time ([8b53171](https://github.com/Zephyruso/zashboard/commit/8b5317106feb349c6f2c2a8dc3cda3deccb284c4))
+* update primary color for light theme and adjust card background hover effect ([b106fa6](https://github.com/Zephyruso/zashboard/commit/b106fa60a3f397e06e0aa8a40ee1810ac7a46791))
+
+## [3.27.0](https://github.com/Zephyruso/zashboard/compare/v3.26.0...v3.27.0) (2026-09-15)
+
+
+### Features
+
+* add a toggle to search hidden columns on the connections page ([1e78ba4](https://github.com/Zephyruso/zashboard/commit/1e78ba4a8b36d841e73334ed6170571aebe13174))
+* add comment for touch detection initialization in tooltip ([7339256](https://github.com/Zephyruso/zashboard/commit/7339256198146aef4bbc0e199e655cb9abee043f))
+* enhance table components with customizable classes and tooltips ([40d6f30](https://github.com/Zephyruso/zashboard/commit/40d6f30df4baee26e5daef5c1ac38e062de21864))
+* implement theme color synchronization with overlay dimming for mobile proxies ([05ba9a4](https://github.com/Zephyruso/zashboard/commit/05ba9a438e132026120722b9e721dbf01652708a))
+* update icon components and add icon generation script ([f0f47e8](https://github.com/Zephyruso/zashboard/commit/f0f47e85ccf97a2b2529209f052ef55e361b36b0))
+
+
+### Bug Fixes
+
+* adjust z-index context for sticky header and refine hidden column search logic ([01b4b15](https://github.com/Zephyruso/zashboard/commit/01b4b1518524f8a016d953e201ed7464dbc2a5c9))
+
+## [3.26.0](https://github.com/Zephyruso/zashboard/compare/v3.25.0...v3.26.0) (2026-09-07)
+
+
+### Features
+
+* implement collapse motion for cards and optimize virtual row shifting ([ac86982](https://github.com/Zephyruso/zashboard/commit/ac869828b38405e675a41eed670bbd5b90290df6))
+* implement virtual scrolling for proxies list and optimize latency handling ([fd8fc51](https://github.com/Zephyruso/zashboard/commit/fd8fc51bf703913e9275a164c7c8c75c76a1d3d0))
+* scroll to the active node on expand and fix node scroll positioning ([cb15575](https://github.com/Zephyruso/zashboard/commit/cb15575a025255e9968009a96eb4368cc9169ed4))
+
+
+### Bug Fixes
+
+* adjust virtual table layout for proper sticky header and background alignment ([4a7e06e](https://github.com/Zephyruso/zashboard/commit/4a7e06e9024aed107751b8656875f0cade13fc63))
+* ensure full proxy chain is always displayed in connection details ([c88976d](https://github.com/Zephyruso/zashboard/commit/c88976d668a25a12e0696007da19292919b5155d))
+* improve layout of connection metrics by adjusting icon positioning and spacing ([2b59feb](https://github.com/Zephyruso/zashboard/commit/2b59febc3bd2751934ff76fe29322d59afbdfd81))
+* update modal open state handling to prevent overflow issues during transitions ([bd65a45](https://github.com/Zephyruso/zashboard/commit/bd65a459555d98e5b2f26afeaa85879ed71ae345))
+
+## [3.25.0](https://github.com/Zephyruso/zashboard/compare/v3.24.0...v3.25.0) (2026-08-31)
+
+
+### Features
+
+* support custom CSS in panel settings ([1da5989](https://github.com/Zephyruso/zashboard/commit/1da5989dfdac6331f6b56ddd8c0aaef3854a37b4))
+
+
+### Bug Fixes
+
+* navigate to proxies before syncing settings on first login ([f6dd9c0](https://github.com/Zephyruso/zashboard/commit/f6dd9c07e843ab89632cc373522254a1bfe6bbe5))
+
 ## [3.24.0](https://github.com/Zephyruso/zashboard/compare/v3.23.0...v3.24.0) (2026-08-28)
 
 

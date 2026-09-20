@@ -109,6 +109,7 @@ const en = {
   ruleCount: 'Rule count',
   hitCount: 'Hits',
   missCount: 'Misses',
+  hitMissCount: 'Hits / Misses',
   behavior: 'Behavior',
   vehicleType: 'Vehicle type',
   customTableColumns: 'Custom table columns',
@@ -143,6 +144,7 @@ const en = {
   automaticDisconnection: 'Auto disconnect on node switch',
   backend: 'Backend',
   tunMode: 'TUN mode',
+  tunStack: 'TUN stack',
   upgradeCore: 'Upgrade core',
   upgradeCoreConfirm:
     'Upgrade the core now? The core will restart and the proxy service will be briefly interrupted.',
@@ -175,6 +177,9 @@ const en = {
   ruleSettings: 'Rule settings',
   connectionDetails: 'Connection details',
   customTheme: 'Custom theme',
+  customCSS: 'Custom CSS',
+  customCSSTip:
+    'The styles below are injected into the page as-is. Invalid rules may break the layout.',
   unavailableProxy: 'Hide unavailable proxies',
   protocolTips:
     'You are trying to connect to an HTTP backend, but zashboard is provided via HTTPS. This may cause connection errors. Please allow insecure content in your browser settings or use the HTTP version of zashboard, such as http://board.zash.run.place.',
@@ -268,6 +273,8 @@ const en = {
   independentLatencyTestTip:
     "When enabled, the latency test will use URLs specified in the configuration file instead of zashboard's URL settings. Latency will be displayed independently based on the URLs set in policy groups.",
   search: 'Search',
+  searchVisibleColumns: 'Search displayed columns',
+  searchHiddenColumns: 'Search hidden columns too',
   searchProxyGroup: 'Search proxy groups',
   searchProxyNode: 'Search proxy nodes',
   proxySearchModeGlobal: 'Node search',
