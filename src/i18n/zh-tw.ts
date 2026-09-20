@@ -575,6 +575,9 @@ const zhTW: LANG_MESSAGE = {
   providerFieldDns: 'DNS 伺服器',
   providerFieldIdle: '閒置逾時',
   providerDnsHint: '請使用無需代理即可存取的解析器，否則隧道會依賴自身。',
+  edit: '編輯',
+  providerEditEntry: '編輯項目',
+  providerKeyUnchanged: '留空則保持不變',
 }
 
 export default zhTW

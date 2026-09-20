@@ -592,6 +592,9 @@ const ru: LANG_MESSAGE = {
   providerFieldIdle: 'Таймаут простоя',
   providerDnsHint:
     'Резолвер должен быть доступен без прокси, иначе туннель начнёт зависеть от самого себя.',
+  edit: 'Изменить',
+  providerEditEntry: 'Изменить запись',
+  providerKeyUnchanged: 'пусто — оставить прежний',
 }
 
 export default ru

@@ -590,6 +590,9 @@ const en = {
   providerFieldIdle: 'Idle timeout',
   providerDnsHint:
     'Use a resolver reached without a proxy, or the tunnel ends up depending on itself.',
+  edit: 'Edit',
+  providerEditEntry: 'Edit entry',
+  providerKeyUnchanged: 'leave blank to keep',
 }
 
 export type LANG_MESSAGE = typeof en

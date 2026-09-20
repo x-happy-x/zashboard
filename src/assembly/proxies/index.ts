@@ -235,11 +235,13 @@ export const allProxiesLatencyTest = () => clash.allProxiesLatencyTest()
 export {
   addProviderProxyAPI,
   deleteProviderProxyAPI,
+  fetchProviderProxiesAPI,
   fetchSmartWeightsAPI,
   fetchTailscaleStatusAPI,
   flushSmartGroupWeightsAPI,
   proxyProviderHealthCheckAPI,
   setTailscaleExitNodeAPI,
   setTailscaleRunningAPI,
+  updateProviderProxyAPI,
   updateProxyProviderAPI,
 } from '@/api/clash'

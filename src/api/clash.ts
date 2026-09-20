@@ -110,6 +110,25 @@ export const addProviderProxyAPI = (providerName: string, proxy: Record<string, 
   return axios.post(`/providers/proxies/${encodeURIComponent(providerName)}/proxies`, proxy)
 }
 
+// Entries come back without their secrets: those never leave the core, and an
+// update merges anything the caller leaves out.
+export const fetchProviderProxiesAPI = (providerName: string) => {
+  return axios.get<{ proxies: Record<string, unknown>[] }>(
+    `/providers/proxies/${encodeURIComponent(providerName)}/proxies`,
+  )
+}
+
+export const updateProviderProxyAPI = (
+  providerName: string,
+  proxyName: string,
+  patch: Record<string, unknown>,
+) => {
+  return axios.put(
+    `/providers/proxies/${encodeURIComponent(providerName)}/proxies/${encodeURIComponent(proxyName)}`,
+    patch,
+  )
+}
+
 export const deleteProviderProxyAPI = (providerName: string, proxyName: string) => {
   return axios.delete(
     `/providers/proxies/${encodeURIComponent(providerName)}/proxies/${encodeURIComponent(proxyName)}`,

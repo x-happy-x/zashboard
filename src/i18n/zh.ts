@@ -575,6 +575,9 @@ const zh: LANG_MESSAGE = {
   providerFieldDns: 'DNS 服务器',
   providerFieldIdle: '空闲超时',
   providerDnsHint: '请使用无需代理即可访问的解析器，否则隧道会依赖自身。',
+  edit: '编辑',
+  providerEditEntry: '编辑条目',
+  providerKeyUnchanged: '留空则保持不变',
 }
 
 export default zh
