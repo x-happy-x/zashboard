@@ -577,6 +577,19 @@ const en = {
   tailscaleAuthorize: 'Authorize',
   tailscaleStop: 'Stop',
   tailscaleStart: 'Start',
+  providerEntries: 'Entries',
+  providerNoEntries: 'No entries yet',
+  providerAddOlcrtc: 'Add an OLCRTC method',
+  providerAdd: 'Add',
+  providerFieldName: 'Name',
+  providerFieldProvider: 'Signalling',
+  providerFieldTransport: 'Transport',
+  providerFieldRoom: 'Room URL',
+  providerFieldKey: 'Encryption key',
+  providerFieldDns: 'DNS server',
+  providerFieldIdle: 'Idle timeout',
+  providerDnsHint:
+    'Use a resolver reached without a proxy, or the tunnel ends up depending on itself.',
 }
 
 export type LANG_MESSAGE = typeof en

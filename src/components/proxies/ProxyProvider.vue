@@ -24,6 +24,15 @@
               class="h-3.5 w-3.5 opacity-60"
             />
           </button>
+          <!-- Only a local file can be edited in place; anything fetched
+               elsewhere would lose the change on its next update. -->
+          <button
+            v-if="proxyProvider.vehicleType === 'File'"
+            class="btn btn-circle btn-ghost btn-sm z-30"
+            @click.stop="openProviderEditor(proxyProvider.name)"
+          >
+            <PencilSquareIcon class="h-3.5 w-3.5 opacity-60" />
+          </button>
           <button
             v-if="proxyProvider.vehicleType !== 'Inline'"
             :class="
@@ -67,6 +76,7 @@
 </template>
 
 <script setup lang="ts">
+import { openProviderEditor } from '@/composables/providerEditor'
 import { proxyProviderHealthCheckAPI, updateProxyProviderAPI } from '@/assembly/proxies'
 import { useBounceOnVisible } from '@/composables/bouncein'
 import { useRenderProxyList } from '@/composables/renderProxies'
@@ -74,7 +84,7 @@ import { notifyRequestError } from '@/helper/requestError'
 import { fromNow, prettyBytesHelper } from '@/helper/utils'
 import { fetchProxies } from '@/assembly/proxies'
 import { proxyProviederList } from '@/assembly/proxies'
-import { ArrowPathIcon, BoltIcon } from '@heroicons/vue/24/outline'
+import { ArrowPathIcon, BoltIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import dayjs from 'dayjs'
 import { toFinite } from 'lodash'
 import { twMerge } from 'tailwind-merge'

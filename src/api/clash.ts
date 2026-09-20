@@ -103,6 +103,19 @@ export const setTailscaleRunningAPI = (proxyName: string, running: boolean) => {
   return axios.put(`/proxies/${encodeURIComponent(proxyName)}/tailscale/running`, { running })
 }
 
+// File-backed providers can be edited through the core, which keeps proxy
+// settings out of the API: entries are added and removed by name rather than
+// by sending the whole list back.
+export const addProviderProxyAPI = (providerName: string, proxy: Record<string, unknown>) => {
+  return axios.post(`/providers/proxies/${encodeURIComponent(providerName)}/proxies`, proxy)
+}
+
+export const deleteProviderProxyAPI = (providerName: string, proxyName: string) => {
+  return axios.delete(
+    `/providers/proxies/${encodeURIComponent(providerName)}/proxies/${encodeURIComponent(proxyName)}`,
+  )
+}
+
 export const fetchProxyProviderAPI = () => {
   return axios.get<{ providers: Record<string, ProxyProvider> }>('/providers/proxies')
 }

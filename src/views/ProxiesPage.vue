@@ -47,6 +47,7 @@
       </div>
     </div>
     <ProxyGroupChainModal />
+    <ProviderEditorModal />
   </div>
 </template>
 
@@ -59,6 +60,7 @@ import ProxyGroup from '@/components/proxies/ProxyGroup.vue'
 import ProxyGroupForMobile from '@/components/proxies/ProxyGroupForMobile.vue'
 import ProxyProvider from '@/components/proxies/ProxyProvider.vue'
 import ProxyGroupChainModal from '@/components/proxies/ProxyGroupChainModal.vue'
+import ProviderEditorModal from '@/components/proxies/ProviderEditorModal.vue'
 import TailscaleDevices from '@/components/proxies/TailscaleDevices.vue'
 import TailscaleExitNodes from '@/components/proxies/TailscaleExitNodes.vue'
 import { isTailscaleDevicesItem, isTailscaleExitItem } from '@/composables/tailscale'

@@ -579,6 +579,19 @@ const ru: LANG_MESSAGE = {
   tailscaleAuthorize: 'Авторизовать',
   tailscaleStop: 'Стоп',
   tailscaleStart: 'Старт',
+  providerEntries: 'Записи',
+  providerNoEntries: 'Пока пусто',
+  providerAddOlcrtc: 'Добавить способ OLCRTC',
+  providerAdd: 'Добавить',
+  providerFieldName: 'Имя',
+  providerFieldProvider: 'Сигналинг',
+  providerFieldTransport: 'Транспорт',
+  providerFieldRoom: 'URL комнаты',
+  providerFieldKey: 'Ключ шифрования',
+  providerFieldDns: 'DNS-сервер',
+  providerFieldIdle: 'Таймаут простоя',
+  providerDnsHint:
+    'Резолвер должен быть доступен без прокси, иначе туннель начнёт зависеть от самого себя.',
 }
 
 export default ru

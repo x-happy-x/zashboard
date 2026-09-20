@@ -563,6 +563,18 @@ const zh: LANG_MESSAGE = {
   tailscaleAuthorize: '去授权',
   tailscaleStop: '停止',
   tailscaleStart: '启动',
+  providerEntries: '条目',
+  providerNoEntries: '暂无条目',
+  providerAddOlcrtc: '添加 OLCRTC 方式',
+  providerAdd: '添加',
+  providerFieldName: '名称',
+  providerFieldProvider: '信令',
+  providerFieldTransport: '传输',
+  providerFieldRoom: '房间 URL',
+  providerFieldKey: '加密密钥',
+  providerFieldDns: 'DNS 服务器',
+  providerFieldIdle: '空闲超时',
+  providerDnsHint: '请使用无需代理即可访问的解析器，否则隧道会依赖自身。',
 }
 
 export default zh

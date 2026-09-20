@@ -563,6 +563,18 @@ const zhTW: LANG_MESSAGE = {
   tailscaleAuthorize: '去授權',
   tailscaleStop: '停止',
   tailscaleStart: '啟動',
+  providerEntries: '項目',
+  providerNoEntries: '尚無項目',
+  providerAddOlcrtc: '新增 OLCRTC 方式',
+  providerAdd: '新增',
+  providerFieldName: '名稱',
+  providerFieldProvider: '信令',
+  providerFieldTransport: '傳輸',
+  providerFieldRoom: '房間 URL',
+  providerFieldKey: '加密金鑰',
+  providerFieldDns: 'DNS 伺服器',
+  providerFieldIdle: '閒置逾時',
+  providerDnsHint: '請使用無需代理即可存取的解析器，否則隧道會依賴自身。',
 }
 
 export default zhTW
