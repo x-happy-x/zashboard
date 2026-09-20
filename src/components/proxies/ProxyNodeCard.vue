@@ -68,11 +68,23 @@ const props = defineProps<{
 
 const node = computed(() => proxyMap.value[props.name])
 const isLatencyTesting = ref(false)
+/*
+ * 卡片上的类型标签寸土寸金,长协议名按约定缩写。顺序有意义:先长后短,
+ * 这样 shadowsocksr -> ssr、hysteria2 -> hy2 都能落到正确的缩写上。
+ */
+const TYPE_ABBREVIATIONS: [string, string][] = [
+  ['shadowsocks', 'ss'],
+  ['hysteria', 'hy'],
+  ['wireguard', 'wg'],
+  ['tailscale', 'tail'],
+  ['olcrtc', 'olc'],
+]
 const typeFormatter = (type: string) => {
   type = type.toLowerCase()
-  type = type.replace('shadowsocks', 'ss')
-  type = type.replace('hysteria', 'hy')
-  type = type.replace('wireguard', 'wg')
+
+  for (const [full, short] of TYPE_ABBREVIATIONS) {
+    type = type.replace(full, short)
+  }
 
   return type
 }
