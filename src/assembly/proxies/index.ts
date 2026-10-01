@@ -1,7 +1,3 @@
-export * from './actions'
-export * from './latency'
-export * from './smart'
-export * from './state'
 export {
   addProviderProxyAPI,
   deleteProviderProxyAPI,
@@ -15,3 +11,7 @@ export {
   updateProviderProxyAPI,
   updateProxyProviderAPI,
 } from '@/api/clash'
+export * from './actions'
+export * from './latency'
+export * from './smart'
+export * from './state'

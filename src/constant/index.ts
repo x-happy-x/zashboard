@@ -420,13 +420,12 @@ export enum MIHOMO {
 
 export const MIHOMO_CHANNEL: Record<MIHOMO, { url: string; check_update_url: string }> = {
   [MIHOMO.Meta]: {
-    url: 'https://github.com/metacubex/mihomo',
-    check_update_url: 'https://api.github.com/repos/MetaCubeX/mihomo/releases/latest',
+    url: 'https://github.com/x-happy-x/mihomo',
+    check_update_url: 'https://api.github.com/repos/x-happy-x/mihomo/releases/latest',
   },
   [MIHOMO.Alpha]: {
-    url: 'https://github.com/metacubex/mihomo',
-    check_update_url:
-      'https://api.github.com/repos/MetaCubeX/mihomo/releases/tags/Prerelease-Alpha',
+    url: 'https://github.com/x-happy-x/mihomo',
+    check_update_url: 'https://api.github.com/repos/x-happy-x/mihomo/releases/latest',
   },
   [MIHOMO.Smart]: {
     url: 'https://github.com/vernesong/mihomo',

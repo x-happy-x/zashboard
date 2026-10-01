@@ -110,7 +110,38 @@ export type TailscaleStatus = {
   peers: TailscalePeer[]
 }
 
+export type AdaptiveProbe = {
+  url: string
+  ok: boolean
+  status?: number
+  bytes: number
+  ms: number
+  stage: string
+  error?: string
+}
+export type AdaptiveHealth = {
+  mode: 'normal' | 'whitelist' | 'offline' | 'unknown'
+  observed: 'normal' | 'whitelist' | 'offline' | 'unknown'
+  pending: number
+  checkedAt: string
+  directAllowed: AdaptiveProbe[] | null
+  directGlobal: AdaptiveProbe[] | null
+  persistenceError?: string
+  rankings: Record<
+    'normal' | 'whitelist',
+    | {
+        name: string
+        stable: boolean
+        successRate: number
+        record: { checks: number; avgMs: number; lastCheck: string }
+      }[]
+    | null
+  >
+  results: Record<string, { mode: string; at: string; ok: boolean; probes: AdaptiveProbe[] }>
+}
+
 export type ProxyProvider = {
+  adaptive?: AdaptiveHealth
   subscriptionInfo?: SubscriptionInfo
   id?: string
   name: string

@@ -71,6 +71,10 @@
       <ProxyPreview :nodes="renderProxies" />
     </template>
     <template v-slot:content>
+      <ProviderAdaptiveHealth
+        v-if="proxyProvider.adaptive"
+        :health="proxyProvider.adaptive"
+      />
       <ProxiesContent :render-proxies="renderProxies" />
     </template>
   </CollapseCard>
@@ -95,6 +99,7 @@ import { useI18n } from 'vue-i18n'
 import CollapseCard from '../common/CollapseCard.vue'
 import ProxiesContent from './ProxiesContent.vue'
 import ProxyPreview from './ProxyPreview.vue'
+import ProviderAdaptiveHealth from './ProviderAdaptiveHealth.vue'
 
 const props = defineProps<{
   name: string

@@ -1,6 +1,25 @@
 import type { LANG_MESSAGE } from './en'
 
 const ru: LANG_MESSAGE = {
+  adaptiveHealth: 'Работоспособность',
+  adaptiveNormal: 'Обычный режим',
+  adaptiveWhitelist: 'Похоже на белые списки',
+  adaptiveOffline: 'Нет прямого доступа',
+  adaptiveUnknown: 'Не определено',
+  adaptiveConfirming: 'Подтверждаем смену режима',
+  adaptiveChecked: 'Проверка сети',
+  adaptiveAllowed: 'Локальные сайты напрямую',
+  adaptiveGlobal: 'Глобальные сайты напрямую',
+  adaptiveStorageError: 'Не удалось сохранить историю',
+  adaptiveHistory: 'История по режимам сети',
+  adaptiveHistoryHint:
+    'У каждого режима своя история. Стабильные серверы проверяются первыми; история не гарантирует доступность сейчас.',
+  adaptiveNoHistory: 'В этом режиме проверок ещё не было',
+  adaptiveSuccess: 'Успешность',
+  adaptiveChecks: 'Проверки',
+  adaptiveStable: 'Стабильный',
+  adaptiveLastCheck: 'Последний GET',
+
   setup: 'Настройка',
   overview: 'Обзор',
   proxies: 'Прокси',

@@ -1,0 +1,38 @@
+name: Fork release
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: fork-release
+  cancel-in-progress: false
+jobs:
+  release:
+    if: github.repository == 'x-happy-x/zashboard' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - uses: pnpm/action-setup@v6
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run type-check
+      - name: Version and build
+        run: |
+          VERSION=$(node -p "require('./package.json').version")-fork.${{ github.run_number }}
+          echo "TAG=v$VERSION" >> "$GITHUB_ENV"
+          npm pkg set "version=$VERSION"
+          mkdir release
+          FONT=cdn pnpm run build
+          (cd dist && zip -qr ../release/dist-cdn-fonts.zip .)
+          FONT=all pnpm run build
+          (cd dist && zip -qr ../release/dist.zip .)
+          (cd release && sha256sum *.zip > sha256sums.txt)
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$TAG" release/* --target "$GITHUB_SHA" --title "$TAG" --generate-notes --latest

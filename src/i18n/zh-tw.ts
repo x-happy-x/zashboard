@@ -1,6 +1,25 @@
 import type { LANG_MESSAGE } from './en'
 
 const zhTW: LANG_MESSAGE = {
+  adaptiveHealth: 'Connection health',
+  adaptiveNormal: 'Normal',
+  adaptiveWhitelist: 'Whitelist suspected',
+  adaptiveOffline: 'Direct access unavailable',
+  adaptiveUnknown: 'Not determined',
+  adaptiveConfirming: 'Confirming network change',
+  adaptiveChecked: 'Network checked',
+  adaptiveAllowed: 'Local sites, direct',
+  adaptiveGlobal: 'Global sites, direct',
+  adaptiveStorageError: 'History could not be saved',
+  adaptiveHistory: 'History by network mode',
+  adaptiveHistoryHint:
+    'Separate history for each mode. Stable servers are checked first; history does not guarantee current availability.',
+  adaptiveNoHistory: 'No checks in this mode yet',
+  adaptiveSuccess: 'Success rate',
+  adaptiveChecks: 'Checks',
+  adaptiveStable: 'Stable',
+  adaptiveLastCheck: 'Last GET',
+
   setup: '配置',
   overview: '概覽',
   proxies: '代理',
