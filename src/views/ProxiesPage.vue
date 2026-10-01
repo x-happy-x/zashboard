@@ -69,10 +69,10 @@ import { usePaddingForViews } from '@/composables/use-padding-for-views'
 import { disableProxiesPageScroll, renderProxiesPageItems } from '@/helper/proxies'
 import { PROXY_TAB_TYPE } from '@/constant'
 import { isMiddleScreen } from '@/helper/utils'
-import { fetchProxies } from '@/assembly/proxies'
+import { fetchProxies, proxyProviederList } from '@/assembly/proxies'
 import { disableProxiesPageTextSelect, twoColumnProxyGroup } from '@/store/settings'
 import { folderManagerOpen, isProxyFolderModeActive } from '@/store/proxy-folders'
-import { useResizeObserver, useSessionStorage } from '@vueuse/core'
+import { useIntervalFn, useResizeObserver, useSessionStorage } from '@vueuse/core'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 const { padding } = usePaddingForViews({
@@ -81,6 +81,23 @@ const { padding } = usePaddingForViews({
 })
 const renderPageItems = renderProxiesPageItems
 const proxiesRef = ref<HTMLElement | null>(null)
+let refreshingAdaptive = false
+useIntervalFn(async () => {
+  if (
+    document.visibilityState !== 'visible' ||
+    refreshingAdaptive ||
+    !proxyProviederList.value.some((p) => p.adaptive)
+  )
+    return
+  refreshingAdaptive = true
+  try {
+    await fetchProxies()
+  } catch {
+    // Keep the last visible snapshot while the backend reconnects.
+  } finally {
+    refreshingAdaptive = false
+  }
+}, 5000)
 
 type ScrollAnchor = {
   item: string
