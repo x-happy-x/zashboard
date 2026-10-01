@@ -43,7 +43,7 @@
  */
 import { exitNodeValue, peerLabel } from '@/composables/tailscale'
 import { PROXY_PREVIEW_TYPE } from '@/constant'
-import { useTooltip } from '@/helper/tooltip'
+import { useTooltip } from '@/composables/use-tooltip'
 import { proxyPreviewType } from '@/store/settings'
 import type { TailscalePeer } from '@/types'
 import { useElementSize } from '@vueuse/core'
