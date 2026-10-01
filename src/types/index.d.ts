@@ -1,6 +1,7 @@
-// 只剩 Clash REST/WS 一种后端。字段保留是为了让旧记录的迁移与 URL 参数解析
-// 有个明确的落点,不必在每处都写字面量。
-export type BackendType = 'clash'
+export * from './dae'
+import type { DaeConnectionRawMessage } from './dae'
+
+export type BackendType = 'clash' | 'dae'
 
 export type Backend = {
   type: BackendType
@@ -8,7 +9,8 @@ export type Backend = {
   host: string
   port: string
   secondaryPath: string
-  password: string // Clash secret
+  password: string
+  username?: string
   uuid: string
   label?: string
   disableUpgradeCore?: boolean
@@ -30,6 +32,7 @@ export type Config = {
   ipv6: boolean
   tun: {
     enable: boolean
+    stack?: string
   }
 }
 
@@ -39,6 +42,7 @@ export type History = {
 }[]
 
 export type Proxy = {
+  id?: string
   name: string
   type: string
   history: History
@@ -69,8 +73,77 @@ export type SubscriptionInfo = {
   Expire?: number
 }
 
+/** One node of a tailnet, as reported by the core for a Tailscale outbound. */
+export type TailscalePeer = {
+  id: string
+  hostName: string
+  dnsName: string
+  os?: string
+  ips: string[] | null
+  tags?: string[]
+  routes?: string[]
+  relay?: string
+  online: boolean
+  self: boolean
+  /** This peer is the exit node currently in use. */
+  exitNode: boolean
+  /** This peer may be selected as an exit node. */
+  exitNodeOption: boolean
+  /** RFC3339, only set while the node is offline. */
+  lastSeen?: string
+  rxBytes: number
+  txBytes: number
+}
+
+export type TailscaleStatus = {
+  /** ipn.State string, e.g. 'Running' or 'NeedsLogin'. */
+  backendState: string
+  self?: TailscalePeer
+  /** Set while the node needs a login; opening it authorises the node. */
+  authURL?: string
+  /** What the outbound is configured to use; '' when none. */
+  exitNode: string
+  /** Whether traffic is actually leaving through an exit node. */
+  exitNodeActive: boolean
+  /** Administrative on/off switch, the equivalent of tailscale up/down. */
+  wantRunning: boolean
+  peers: TailscalePeer[]
+}
+
+export type AdaptiveProbe = {
+  url: string
+  ok: boolean
+  status?: number
+  bytes: number
+  ms: number
+  stage: string
+  error?: string
+}
+export type AdaptiveHealth = {
+  mode: 'normal' | 'whitelist' | 'offline' | 'unknown'
+  observed: 'normal' | 'whitelist' | 'offline' | 'unknown'
+  pending: number
+  checkedAt: string
+  directAllowed: AdaptiveProbe[] | null
+  directGlobal: AdaptiveProbe[] | null
+  persistenceError?: string
+  rankings: Record<
+    'normal' | 'whitelist',
+    | {
+        name: string
+        stable: boolean
+        successRate: number
+        record: { checks: number; avgMs: number; lastCheck: string }
+      }[]
+    | null
+  >
+  results: Record<string, { mode: string; at: string; ok: boolean; probes: AdaptiveProbe[] }>
+}
+
 export type ProxyProvider = {
+  adaptive?: AdaptiveHealth
   subscriptionInfo?: SubscriptionInfo
+  id?: string
   name: string
   proxies: Proxy[]
   testUrl: string
@@ -84,9 +157,7 @@ export type Rule = {
   proxy: string
   size: number
   uuid: string
-  // sing-box-reFind
   disabled?: boolean
-  // mihomo
   index: number
   extra?: {
     disabled: false
@@ -144,7 +215,7 @@ export type ClashConnectionRawMessage = {
   }
 }
 
-export type ConnectionRawMessage = ClashConnectionRawMessage
+export type ConnectionRawMessage = ClashConnectionRawMessage | DaeConnectionRawMessage
 
 export type Connection = ConnectionRawMessage & {
   downloadSpeed: number
@@ -185,17 +256,12 @@ export type SourceIPLabel = {
   scope?: string[]
 }
 
-// smart core
 export interface NodeRank {
   Name: string
   Rank: string
   Weight: number
 }
 
-// honk core —— GET /stats 的用户态运行时快照。
-// 该端点还会返回就绪池 / warm 资源 / TCP / Score / UDP-NFQUEUE 等内部计量
-// (完整 schema 见 honk 仓库 doc/en/reference/api.md 的「GET /stats」一节),
-// 面板只取其中的出站统计,故这里只声明用得到的部分。
 export type HonkStats = {
   outbounds: {
     name: string

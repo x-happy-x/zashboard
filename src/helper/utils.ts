@@ -11,16 +11,31 @@ export const isPWA = (() => {
 })()
 
 export const prettyBytesHelper = (bytes: number, opts?: Options) => {
-  // prettyBytes 对 NaN / Infinity 是抛错的。格式化函数几乎全在渲染函数里调用,
-  // 一个脏字段抛出去就会毁掉整棵 vnode 树(而不只是这一格),故就地兜住。
   return prettyBytes(Number.isFinite(bytes) ? bytes : 0, {
     binary: false,
     ...opts,
   })
 }
 
+export const prettySpeedHelper = (bytes: number, opts?: Options) => {
+  const value = Number.isFinite(bytes) ? bytes : 0
+  const maximumFractionDigits = opts?.maximumFractionDigits ?? 1
+
+  return value < 1000
+    ? `${(value / 1000).toFixed(maximumFractionDigits)} kB`
+    : prettyBytesHelper(value, { maximumFractionDigits, ...opts })
+}
+
 export const fromNow = (timestamp: string | number) => {
   return dayjs(timestamp).fromNow()
+}
+
+export const prettyUptimeHelper = (seconds: number) => {
+  if (!Number.isFinite(seconds) || seconds < 0) return '-'
+
+  const uptime = dayjs.duration(seconds, 'seconds')
+
+  return uptime.days() > 0 ? uptime.format('D[d] HH:mm:ss') : uptime.format('HH:mm:ss')
 }
 
 export const getDashboardSettingsFromStorage = () => {
@@ -72,7 +87,6 @@ export const getUrlFromBackend = (end: {
   return `${end.protocol}://${end.host}:${end.port}${end.secondaryPath || ''}`
 }
 
-// 探测 / 诊断打的那个地址:Clash REST 根路径。
 export const getBackendProbeUrl = (end: Omit<Backend, 'uuid'>) => getUrlFromBackend(end)
 
 export const getLabelFromBackend = (end: Omit<Backend, 'uuid'>) => {
@@ -85,44 +99,6 @@ export const getMinCardWidth = (size: PROXY_CARD_SIZE) => {
 
 export const PROXIES_PARENT_CLASS = 'proxies-scrollable-parent'
 
-export const scrollIntoCenter = (el: HTMLElement) => {
-  const scrollableParent = findScrollableParent(el)
-
-  if (!scrollableParent) return
-
-  const parentTop = scrollableParent.offsetTop
-  const childTop = el.offsetTop
-
-  // 判断可见性只能用布局位置(offsetTop),不能用 getBoundingClientRect:
-  // 列表重排时 TransitionGroup 的 FLIP 会给卡片挂 transform,rect 停在动画起点(旧位置,
-  // 通常还在视口内),会被误判成"已经可见"而跳过滚动。
-  const relativeTop = childTop - parentTop - scrollableParent.scrollTop
-
-  if (relativeTop >= 0 && relativeTop + el.clientHeight <= scrollableParent.clientHeight) return
-
-  const centerOffset =
-    childTop - parentTop - scrollableParent.clientHeight / 2 + el.clientHeight / 2
-
-  scrollableParent.scrollTo({
-    top: centerOffset,
-    behavior: 'smooth',
-  })
-}
-
-export const findScrollableParent = (el: HTMLElement | null): HTMLElement | null => {
-  const parent = el?.parentElement
-
-  if (
-    parent?.classList.contains(PROXIES_PARENT_CLASS) &&
-    parent.scrollHeight > parent.clientHeight
-  ) {
-    return parent
-  }
-
-  return parent ? findScrollableParent(parent) : null
-}
-
-// 新格式 protocol=http/https 优先,旧格式 http / https 标记参数仍保留兼容,最后兜底当前页面协议。
 const getProtocolFromQuery = (query: URLSearchParams) => {
   const protocol = query.get('protocol')
 
@@ -145,8 +121,10 @@ export const getBackendFromUrl = () => {
   )
 
   if (query.has('hostname')) {
+    const type = query.get('type') === 'dae' ? 'dae' : 'clash'
+
     return {
-      type: 'clash' as BackendType,
+      type: type as BackendType,
       protocol: getProtocolFromQuery(query),
       secondaryPath: query.get('secondaryPath') || '',
       host: query.get('hostname') as string,

@@ -1,14 +1,6 @@
 <template>
   <div
-    ref="cardRef"
-    :class="
-      twMerge(
-        'bg-base-200 relative flex cursor-pointer flex-col items-start rounded-md hover:shadow-sm',
-        active ? 'bg-primary/85 sm:hover:bg-primary/95' : 'sm:hover:bg-base-300/50',
-        isSmallCard ? 'gap-1 p-1' : 'gap-2 p-2',
-        latencyTipAnimationClass,
-      )
-    "
+    :class="cardClass"
     @contextmenu.stop.prevent="handlerLatencyTest"
   >
     <div
@@ -51,15 +43,18 @@
 </template>
 
 <script setup lang="ts">
+import { smartWeightsMap } from '@/assembly/proxies'
 import { PROXY_CARD_SIZE, PROXY_SORT_TYPE } from '@/constant'
 import { checkTruncation } from '@/helper/tooltip'
-import { scrollIntoCenter } from '@/helper/utils'
+import {
+  highlightProxyNode,
+  highlightedProxyNode,
+  scrollNodeIntoViewKey,
+} from '@/helper/proxies-scroll'
 import { proxyLatencyTest } from '@/assembly/proxies'
 import { getIPv6ByName, getTestUrl, proxyMap } from '@/assembly/proxies'
 import { IPv6test, proxyCardSize, proxySortType, truncateProxyName } from '@/store/settings'
-import { smartWeightsMap } from '@/store/smart'
-import { twMerge } from 'tailwind-merge'
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, inject, nextTick, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import LatencyTag from './LatencyTag.vue'
 import ProxyIcon from './ProxyIcon.vue'
@@ -71,14 +66,25 @@ const props = defineProps<{
   groupName?: string
 }>()
 
-const cardRef = ref()
 const node = computed(() => proxyMap.value[props.name])
 const isLatencyTesting = ref(false)
+/*
+ * 卡片上的类型标签寸土寸金,长协议名按约定缩写。顺序有意义:先长后短,
+ * 这样 shadowsocksr -> ssr、hysteria2 -> hy2 都能落到正确的缩写上。
+ */
+const TYPE_ABBREVIATIONS: [string, string][] = [
+  ['shadowsocks', 'ss'],
+  ['hysteria', 'hy'],
+  ['wireguard', 'wg'],
+  ['tailscale', 'tail'],
+  ['olcrtc', 'olc'],
+]
 const typeFormatter = (type: string) => {
   type = type.toLowerCase()
-  type = type.replace('shadowsocks', 'ss')
-  type = type.replace('hysteria', 'hy')
-  type = type.replace('wireguard', 'wg')
+
+  for (const [full, short] of TYPE_ABBREVIATIONS) {
+    type = type.replace(full, short)
+  }
 
   return type
 }
@@ -93,7 +99,19 @@ const typeDescription = computed(() => {
   return [type, isUDP, smartDesc, isV6].filter(Boolean).join(isSmallCard.value ? '/' : ' / ')
 })
 
-const latencyTipAnimationClass = ref<string[]>([])
+const scrollNodeIntoView = inject(scrollNodeIntoViewKey, null)
+const latencyTipAnimationClass = computed(() =>
+  highlightedProxyNode.value === props.name ? ['latency-highlight'] : [],
+)
+
+const cardClass = computed(() => [
+  'relative flex cursor-pointer flex-col items-start rounded-md hover:shadow-sm',
+  props.active
+    ? 'proxy-active-card bg-primary/95 sm:hover:bg-primary'
+    : 'bg-base-200 sm:hover:bg-base-300/50',
+  isSmallCard.value ? 'gap-1 p-1' : 'gap-2 p-2',
+  latencyTipAnimationClass.value,
+])
 const handlerLatencyTest = async () => {
   if (isLatencyTesting.value) return
 
@@ -105,31 +123,41 @@ const handlerLatencyTest = async () => {
     isLatencyTesting.value = false
   }
 
-  if (
-    [PROXY_SORT_TYPE.LATENCY_ASC, PROXY_SORT_TYPE.LATENCY_DESC].includes(proxySortType.value) &&
-    cardRef.value
-  ) {
-    // 等排序后的 DOM 落地再量位置,否则拿到的还是重排前的旧坐标。
+  if ([PROXY_SORT_TYPE.LATENCY_ASC, PROXY_SORT_TYPE.LATENCY_DESC].includes(proxySortType.value)) {
+    highlightProxyNode(props.name)
     await nextTick()
-    scrollIntoCenter(cardRef.value)
-    latencyTipAnimationClass.value = ['latency-highlight']
-    setTimeout(() => {
-      latencyTipAnimationClass.value = []
-    }, 1500)
+    scrollNodeIntoView?.(props.name)
   }
 }
-
-onMounted(() => {
-  if (props.active) {
-    setTimeout(() => {
-      scrollIntoCenter(cardRef.value)
-    }, 300)
-  }
-})
 </script>
 
 <style scoped>
 .tooltip:before {
   z-index: 20;
+}
+
+.latency-highlight::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background-color: var(--color-info);
+  animation: latencyHighlightFade 1.5s ease-out forwards;
+}
+
+@keyframes latencyHighlightFade {
+  0% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .latency-highlight::after {
+    animation: none;
+  }
 }
 </style>

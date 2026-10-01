@@ -12,6 +12,7 @@
         </div>
         <div class="flex items-center gap-1.5">
           <button
+            v-if="can('proxyProviderHealthCheck')"
             class="btn btn-circle btn-ghost btn-sm z-30"
             @click.stop="healthCheckClickHandler"
           >
@@ -24,8 +25,17 @@
               class="h-3.5 w-3.5 opacity-60"
             />
           </button>
+          <!-- Only a local file can be edited in place; anything fetched
+               elsewhere would lose the change on its next update. -->
           <button
-            v-if="proxyProvider.vehicleType !== 'Inline'"
+            v-if="proxyProvider.vehicleType === 'File'"
+            class="btn btn-circle btn-ghost btn-sm z-30"
+            @click.stop="openProviderEditor(proxyProvider.name)"
+          >
+            <PencilSquareIcon class="h-3.5 w-3.5 opacity-60" />
+          </button>
+          <button
+            v-if="proxyProvider.vehicleType !== 'Inline' && can('proxyProviderUpdate')"
             :class="
               twMerge('btn btn-circle btn-ghost btn-sm z-30', isUpdating ? 'animate-spin' : '')
             "
@@ -61,20 +71,26 @@
       <ProxyPreview :nodes="renderProxies" />
     </template>
     <template v-slot:content>
+      <ProviderAdaptiveHealth
+        v-if="proxyProvider.adaptive"
+        :health="proxyProvider.adaptive"
+      />
       <ProxiesContent :render-proxies="renderProxies" />
     </template>
   </CollapseCard>
 </template>
 
 <script setup lang="ts">
-import { proxyProviderHealthCheckAPI, updateProxyProviderAPI } from '@/assembly/proxies'
-import { useBounceOnVisible } from '@/composables/bouncein'
-import { useRenderProxyList } from '@/composables/renderProxies'
-import { notifyRequestError } from '@/helper/requestError'
+import { openProviderEditor } from '@/composables/providerEditor'
+import { can } from '@/assembly/backend'
+import { proxyProviderHealthCheck, updateProxyProvider } from '@/assembly/proxies'
+import { useBounceOnVisible } from '@/composables/use-bounce-on-visible'
+import { useRenderProxyList } from '@/composables/use-render-proxy-list'
+import { notifyRequestError } from '@/helper/request-error'
 import { fromNow, prettyBytesHelper } from '@/helper/utils'
 import { fetchProxies } from '@/assembly/proxies'
 import { proxyProviederList } from '@/assembly/proxies'
-import { ArrowPathIcon, BoltIcon } from '@heroicons/vue/24/outline'
+import { ArrowPathIcon, BoltIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import dayjs from 'dayjs'
 import { toFinite } from 'lodash'
 import { twMerge } from 'tailwind-merge'
@@ -83,6 +99,7 @@ import { useI18n } from 'vue-i18n'
 import CollapseCard from '../common/CollapseCard.vue'
 import ProxiesContent from './ProxiesContent.vue'
 import ProxyPreview from './ProxyPreview.vue'
+import ProviderAdaptiveHealth from './ProviderAdaptiveHealth.vue'
 
 const props = defineProps<{
   name: string
@@ -142,7 +159,7 @@ const healthCheckClickHandler = async () => {
 
   isHealthChecking.value = true
   try {
-    await proxyProviderHealthCheckAPI(props.name)
+    await proxyProviderHealthCheck(props.name)
     await fetchProxies()
   } catch (e) {
     notifyRequestError(e)
@@ -156,7 +173,7 @@ const updateProviderClickHandler = async () => {
 
   isUpdating.value = true
   try {
-    await updateProxyProviderAPI(props.name)
+    await updateProxyProvider(props.name)
     await fetchProxies()
   } catch (e) {
     notifyRequestError(e)
