@@ -1,6 +1,7 @@
 import { can } from '@/assembly/backend'
 import { useStorage } from '@/composables/use-storage'
 import { NOT_CONNECTED, PROXY_TYPE, TEST_URL } from '@/constant'
+import { adaptiveLatency } from '@/helper/adaptive-health'
 import { groupTestUrls, independentLatencyTest, speedtestUrl } from '@/store/settings'
 import type { Proxy, ProxyProvider } from '@/types'
 import { last } from 'lodash'
@@ -69,7 +70,10 @@ const getLatencyMap = (testUrl: string) => {
         const result: LatencyMap = new Map()
 
         for (const name of Object.keys(proxyMap.value)) {
-          result.set(name, getLatencyFromHistory(readHistory(name, testUrl)))
+          result.set(
+            name,
+            getAdaptiveLatencyByName(name) || getLatencyFromHistory(readHistory(name, testUrl)),
+          )
         }
 
         return result
@@ -94,6 +98,15 @@ export const latencyMapOf = (groupName?: MaybeRefOrGetter<string | undefined>) =
 
 export const getLatencyByName = (proxyName: string, groupName?: string) => {
   return getLatencyMap(getTestUrlBucket(groupName)).value.get(proxyName) ?? NOT_CONNECTED
+}
+
+export const getAdaptiveLatencyByName = (proxyName: string) => {
+  const name = getNowProxyNodeName(proxyName)
+  for (const provider of proxyProviederList.value) {
+    const result = provider.adaptive?.results[name]
+    if (result) return adaptiveLatency(result)
+  }
+  return 0
 }
 
 export const getHistoryByName = (proxyName: string, groupName?: string) => {

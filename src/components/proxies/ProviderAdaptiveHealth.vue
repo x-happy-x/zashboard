@@ -13,12 +13,17 @@
       </span>
     </div>
     <p
-      v-if="health.pending"
+      v-if="health.pending && health.mode !== health.observed"
       class="text-warning mt-2 text-xs"
     >
       {{ $t('adaptiveConfirming') }}: {{ $t(labels[health.observed]) }} ({{ health.pending }})
     </p>
     <p class="text-base-content/60 mt-2 text-xs">{{ $t('adaptiveChecked') }}: {{ checkedAt }}</p>
+    <p class="text-base-content/60 mt-2 text-xs">
+      GET · {{ $t('adaptiveChecks') }}: {{ Object.keys(health.results).length }}/{{
+        health.rankings.normal?.length ?? 0
+      }}
+    </p>
     <div class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs">
       <span>{{ $t('adaptiveAllowed') }}: {{ passed(health.directAllowed) }}</span>
       <span>{{ $t('adaptiveGlobal') }}: {{ passed(health.directGlobal) }}</span>
@@ -40,7 +45,7 @@
         class="btn btn-xs join-item"
         :class="selected === mode ? 'btn-primary' : 'btn-ghost'"
         :aria-pressed="selected === mode"
-        @click="selected = mode"
+        @click="selectMode(mode)"
       >
         {{ $t(labels[mode]) }}
       </button>
@@ -80,7 +85,11 @@
                 <span class="block min-w-28 break-words">{{ node.name }}</span>
               </div>
               <details
-                v-if="health.results[node.name]?.mode === selected"
+                v-if="
+                  health.results[node.name] &&
+                  (health.results[node.name].mode === selected ||
+                    (!health.results[node.name].mode && health.observed === selected))
+                "
                 class="mt-1 text-xs"
               >
                 <summary class="text-base-content/60 cursor-pointer">
@@ -99,7 +108,7 @@
                 </div>
               </details>
             </td>
-            <td>{{ Math.round(node.successRate * 100) }}%</td>
+            <td>{{ node.record.checks ? Math.round(node.successRate * 100) + '%' : '—' }}</td>
             <td>{{ node.record.checks }}</td>
             <td>{{ Math.round(node.record.avgMs) || '—' }}</td>
           </tr>
@@ -110,7 +119,7 @@
 </template>
 <script setup lang="ts">
 import type { AdaptiveHealth, AdaptiveProbe } from '@/types'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 const props = defineProps<{ health: AdaptiveHealth }>()
 const modes = ['normal', 'whitelist'] as const
 const labels = {
@@ -120,7 +129,20 @@ const labels = {
   unknown: 'adaptiveUnknown',
 } as const
 const selected = ref<'normal' | 'whitelist'>(
-  props.health.mode === 'whitelist' ? 'whitelist' : 'normal',
+  props.health.mode === 'whitelist' || props.health.observed === 'whitelist'
+    ? 'whitelist'
+    : 'normal',
+)
+const manualMode = ref(false)
+const selectMode = (mode: 'normal' | 'whitelist') => {
+  selected.value = mode
+  manualMode.value = true
+}
+watch(
+  () => props.health.observed,
+  (mode) => {
+    if (!manualMode.value && (mode === 'normal' || mode === 'whitelist')) selected.value = mode
+  },
 )
 const ranked = computed(() => props.health.rankings[selected.value] ?? [])
 const formatTime = (value: string) =>

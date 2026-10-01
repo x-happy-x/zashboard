@@ -1,5 +1,6 @@
 <template>
   <div
+    :title="adaptiveDelay ? 'GET · ' + adaptiveDelay + ' ms' : undefined"
     :class="[
       'latency-tag bg-base-100 h-5 w-10 rounded-xl text-xs select-none md:hover:shadow-sm',
       color,
@@ -30,7 +31,7 @@
 import { NOT_CONNECTED } from '@/constant'
 import { getColorForLatency } from '@/helper'
 import { useTooltip } from '@/composables/use-tooltip'
-import { getHistoryByName, getLatencyByName } from '@/assembly/proxies'
+import { getAdaptiveLatencyByName, getHistoryByName, getLatencyByName } from '@/assembly/proxies'
 import { BoltIcon } from '@heroicons/vue/24/outline'
 import { CountUp } from 'countup.js'
 import dayjs from 'dayjs'
@@ -38,6 +39,12 @@ import { computed, onUnmounted, ref, watch } from 'vue'
 
 const { showTip } = useTooltip()
 const handlerHistoryTip = (e: Event) => {
+  if (adaptiveDelay.value) {
+    const content = document.createElement('div')
+    content.textContent = 'GET · ' + adaptiveDelay.value + ' ms'
+    showTip(e, content, { touch: false })
+    return
+  }
   const history = getHistoryByName(props.name ?? '', props.groupName)
 
   if (!history.length) return
@@ -72,6 +79,7 @@ const props = defineProps<{
   groupName?: string
 }>()
 const latencyRef = ref<HTMLElement | null>(null)
+const adaptiveDelay = computed(() => getAdaptiveLatencyByName(props.name ?? ''))
 const latency = computed(() => getLatencyByName(props.name ?? '', props.groupName))
 let countUp: CountUp | null = null
 let shownLatency = latency.value
